@@ -79,6 +79,7 @@ export default function App() {
       </KeyboardAvoidingView>
     </View>
   );
+  
 }
 
 const styles = StyleSheet.create({
@@ -125,3 +126,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+
