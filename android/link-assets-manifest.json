@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/ChivoMono-Italic-VariableFont_wght.ttf",
+      "sha1": "74e734d8d1f467dc7fd254359b595c2ed8e9decf"
+    },
+    {
+      "path": "assets/fonts/ChivoMono-VariableFont_wght.ttf",
+      "sha1": "86a3f6830e4fb41dc6ee65748539f2e454e0f29f"
+    }
+  ]
+}
