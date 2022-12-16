@@ -32,18 +32,8 @@ export default function App() {
         initialRouteName="Home"
         screenOptions={{headerShown: false,}}
         >
-        <Drawer.Screen name="Home" component={Home}
-        options ={{
-          drawerIcon: ({focused}) => (
-            <FontAwesomeIcon icon={faHomeLgAlt} size='20'/>
-          )
-          }} />
-        <Drawer.Screen name="Completed" component={Completed}
-        options= {{
-          drawerIcon: ({focused}) => (
-            <FontAwesomeIcon icon={faCheck} size={30}/>
-          )
-        }}/>
+        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="Completed" component={Completed}/>
       </Drawer.Navigator>
     </NavigationContainer>
   );

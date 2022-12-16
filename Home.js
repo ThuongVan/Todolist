@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -10,28 +10,60 @@ import {
   Keyboard,
   ScrollView,
   FlatList,
+  Alert,
 } from 'react-native';
 import Task from './Task';
 import SplashScreen from 'react-native-splash-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
   const [task, setTask] = useState('');
   const [taskItems, setTaskItems] = useState([]);
-
-  const handleAddTask = () => {
-    Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    setTask(null);
+  const getData = () => {
+    try {
+      AsyncStorage.getItem('taskItems').then(value => {
+        if (value != null) {
+          setTaskItems(JSON.parse(value));
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const completeTask = () => {
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const handleAddTask = async () => {
+    if (task.length === 0) {
+      Alert.alert('Warning!', 'Please write your task');
+    } else if (taskItems.includes(task)) {
+      Alert.alert('Warning!', 'Task already exists');
+    } else {
+      try {
+        Keyboard.dismiss();
+        const newTaskItems = [...taskItems, task];
+        setTaskItems(newTaskItems);
+        await AsyncStorage.setItem('taskItems', JSON.stringify(newTaskItems));
+        setTask(null);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const completeTask = index => {
     let itemsCopy = [...taskItems];
-    itemsCopy.splice('', 1);
+    itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy);
+    AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
   };
+  
 
-  setTimeout(() => {
+  useEffect(() => {
     SplashScreen.hide();
-  }, 1000);
+  }, []);
+
 
   return (
     <View style={styles.container}>
@@ -45,8 +77,8 @@ export default function Home() {
           <View style={styles.items}>
             <FlatList
               data={taskItems}
-              renderItem={({item}) => (
-                <Task text={item} completeTask={() => completeTask(item)} />
+              renderItem={({item, index}) => (
+                <Task text={item} completeTask={() => completeTask(index)} />
               )}
             />
           </View>
@@ -81,8 +113,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   sectionTitle: {
-    size: 40,
-    fontFamily:'ChivoMono-Italic-VariableFont_wght',
+    fontSize: 40,
+
     
   },
   items: {

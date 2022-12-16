@@ -2,17 +2,14 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
 
-const Task = (props) => {
+const Task = props => {
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
         <View style={styles.square}></View>
-        <TextInput style={styles.itemText}>{props.text}</TextInput>
+        <TextInput style={styles.itemText} value={props.text} />
       </View>
-      <TouchableOpacity
-        style={styles.delButton}
-        onPress={props.completeTask}
-      >
+      <TouchableOpacity style={styles.delButton} onPress={props.completeTask}>
         <Text style={styles.delText}>Delete</Text>
       </TouchableOpacity>
     </View>
@@ -27,12 +24,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 20
   },
   itemLeft: {
     flexDirection: "row",
     alignItems: "center",
-    flexWrap: "wrap",
+    flexWrap: "wrap"
   },
   square: {
     width: 24,
@@ -40,18 +37,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#55BCF6",
     opacity: 0.4,
     borderRadius: 5,
-    marginRight: 15,
+    marginRight: 15
   },
   itemText: {
     maxWidth: "80%",
-    fontSize: 20,
+    fontSize: 20
   },
   circular: {
     width: 12,
     height: 12,
     borderColor: "#55BCF6",
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: 5
   },
   delButton: {
     backgroundColor: "#FF6883",
@@ -60,12 +57,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: "row",
     justifyContent: "center",
-    alignContent: "center",
+    alignContent: "center"
   },
   delText: {
     fontSize: 14,
-    fontWeight: "bold",
-  },
+    fontWeight: "bold"
+  }
 });
 
 export default Task;
