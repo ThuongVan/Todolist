@@ -41,7 +41,7 @@ export default function App() {
         <Drawer.Screen name="Completed" component={Completed}
         options= {{
           drawerIcon: ({focused}) => (
-            <FontAwesomeIcon icon={faCheck}/>
+            <FontAwesomeIcon icon={faCheck} size={30}/>
           )
         }}/>
       </Drawer.Navigator>

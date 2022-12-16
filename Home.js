@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 30,
+    size: 40,
     fontFamily:'ChivoMono-Italic-VariableFont_wght',
     
   },
