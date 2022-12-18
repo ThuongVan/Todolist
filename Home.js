@@ -14,57 +14,61 @@ import {
 } from 'react-native';
 import Task from './Task';
 import SplashScreen from 'react-native-splash-screen';
+import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {addTask, deleteTask, loadTasks} from './src/redux/tasksSlice';
 
 export default function Home() {
+  const tasks = useSelector(state => state.tasks);
+  const dispatch = useDispatch();
+
   const [task, setTask] = useState('');
-  const [taskItems, setTaskItems] = useState([]);
-  const getData = () => {
-    try {
-      AsyncStorage.getItem('taskItems').then(value => {
-        if (value != null) {
-          setTaskItems(JSON.parse(value));
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const handleAddTask = async () => {
-    if (task.length === 0) {
-      Alert.alert('Warning!', 'Please write your task');
-    } else if (taskItems.includes(task)) {
-      Alert.alert('Warning!', 'Task already exists');
-    } else {
-      try {
-        Keyboard.dismiss();
-        const newTaskItems = [...taskItems, task];
-        setTaskItems(newTaskItems);
-        await AsyncStorage.setItem('taskItems', JSON.stringify(newTaskItems));
-        setTask(null);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  const completeTask = index => {
-    let itemsCopy = [...taskItems];
-    itemsCopy.splice(index, 1);
-    setTaskItems(itemsCopy);
-    AsyncStorage.setItem('taskItems', JSON.stringify(itemsCopy));
-  };
-  
 
   useEffect(() => {
     SplashScreen.hide();
   }, []);
 
+  useEffect(() => {
+    getData();
+  }, []);
 
+const handleAddTask = () => {
+  if (task.length === 0) {
+    Alert.alert('Warning!', 'Please write your task');
+  } else if (tasks.includes(task)) {
+    Alert.alert('Warning!', 'Task already exists');
+  } else {
+    Keyboard.dismiss();
+    dispatch(addTask(task));
+    setTask('');
+    saveTasks();
+  }
+};
+
+const completeTask = index => {
+  dispatch(deleteTask(index));
+  saveTasks();
+};
+
+
+const getData = () => {
+  AsyncStorage.getItem('tasks').then(value => {
+    if (value == null) {
+      AsyncStorage.setItem('tasks', JSON.stringify([]));
+    } else {
+      dispatch(loadTasks(JSON.parse(value)));
+    }
+  });
+};
+
+  const saveTasks = () => {
+    AsyncStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+  useEffect(() => {
+    saveTasks();
+  }, [tasks]);
+  
+  
   return (
     <View style={styles.container}>
       <View
@@ -76,9 +80,9 @@ export default function Home() {
           <Text style={styles.sectionTitle}>Today's tasks</Text>
           <View style={styles.items}>
             <FlatList
-              data={taskItems}
+              data={tasks}
               renderItem={({item, index}) => (
-                <Task text={item} completeTask={() => completeTask(index)} />
+                <Task text={item} index={index} completeTask={() => completeTask(index)} />
               )}
             />
           </View>
@@ -114,8 +118,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 40,
-
-    
   },
   items: {
     marginTop: 30,
